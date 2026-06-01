@@ -46,7 +46,6 @@ PACMAN_PKGS=(
     "snapper"                     # Command line snapshot management utility natively matching BTRFS
     "snap-pac"                    # Automation hooks triggering pre/post Snapper snapshots during Pacman actions
     "wl-clipboard"                # Command-line copy/paste utilities for native Wayland environments
-    "git"                         # Version control utility required to bootstrap AUR helpers
     "base-devel"                  # Basic development headers required for building native AUR components
 )
 
