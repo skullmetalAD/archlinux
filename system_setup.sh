@@ -31,7 +31,6 @@ PACMAN_PKGS=(
     "dolphin"                     # Feature-rich file manager native to KDE Plasma
     "libreoffice-fresh"           # Cutting-edge stable branch of the LibreOffice productivity suite
     "fastfetch"                   # Lightweight system information rendering tool
-    "epson-inkjet-printer-escpr2" # Official driver extension for newer Epson printer profiles
     "cups"                        # Common Unix Printing System core backend
     "cups-pdf"                    # Virtual print-to-PDF utility extension for CUPS
     "vivaldi"                     # Feature-packed, customizable Chromium-based web browser
@@ -76,6 +75,7 @@ AUR_PKGS=(
     "catppuccin-plasma-colorscheme-macchiato"   # Pastel-inspired warm dark desktop theme palette profile
     "catppuccin-plasma-colorscheme-mocha"       # Pastel-inspired deep dark desktop theme palette profile
     "kvantum-theme-catppuccin-git"              # Standard Catppuccin styles matched for the Kvantum engine
+    "epson-inkjet-printer-escpr2" # Official driver extension for newer Epson printer profiles
 )
 
 yay -S --needed --noconfirm "${AUR_PKGS[@]}"
