@@ -24,6 +24,7 @@ sudo pacman -Sy --noconfirm
 echo "Installing official packages..."
 
 PACMAN_PKGS=(
+    "plasma-meta"		  # plasma environement
     "alacritty"                   # Blazing fast, GPU-accelerated terminal emulator
     "btop"                        # Sleek, modern interactive system resource monitor
     "fish"                        # Smart, interactive shell featuring autosuggestions out of the box
@@ -102,6 +103,7 @@ sudo ufw default allow outgoing
 sudo ufw enable
 
 sudo systemctl enable --now cups
+sudo systemctl enable --now plasmalogin
 
 # ---------------------------------------------------------
 # SECTION 6: Snapper Initialization
