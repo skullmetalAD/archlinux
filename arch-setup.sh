@@ -96,13 +96,13 @@ ok "Base build tools installed"
 if command -v yay &>/dev/null; then
     ok "yay is already installed — skipping"
 else
-    info "Cloning and building yay from AUR..."
-    rm -rf /tmp/yay-build
-    git clone https://aur.archlinux.org/yay.git /tmp/yay-build
-    cd /tmp/yay-build
+    info "Cloning and installing yay from AUR..."
+    rm -rf /tmp/yay-bin
+    git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
+    cd /tmp/yay-bin
     makepkg -si --noconfirm
     cd ~
-    rm -rf /tmp/yay-build
+    rm -rf /tmp/yay-bin
     ok "yay installed"
 fi
 
@@ -187,10 +187,9 @@ AUR_PACKAGES=(
     kwin-karousel                           # KWin script: carousel-style window switcher/taskbar
 
     # -- BTRFS Snapshot Toolchain --
-    limine-snapper-sync                     # Integrates Limine boot entries with Snapper snapshots.
     limine-mkinitcpio-hook                  # Install kernels for the Limine bootloader
-
-
+    limine-snapper-sync                     # Integrates Limine boot entries with Snapper snapshots.
+    
 )
 
 info "Installing ${#AUR_PACKAGES[@]} AUR packages via yay..."
@@ -267,7 +266,7 @@ sudo systemctl enable --now limine-snapper-sync.service
 #ok "limine-snapper service enabled (starts on next boot)"
 
 # -- Plasma Login Manager -----------------------------------------------------
-sudo systemctl enable --now plasmalogin
+sudo systemctl enable plasmalogin
 ok "plasmalogin enabled (starts on next boot)"
 
 # -- Pacman Cache Timer -----------------------------------------------------
