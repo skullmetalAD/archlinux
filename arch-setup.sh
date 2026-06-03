@@ -220,9 +220,9 @@ ok "Default shell set to fish for: $USERNAME"
 sudo chsh -s "$FISH_PATH" root
 ok "Default shell set to fish for: root"
 
-info "Setting Fish to use VI keybindings"
-fish_vi_key_bindings
-ok "VI keybindings set"
+#info "Setting Fish to use VI keybindings"
+#fish_vi_key_bindings
+#ok "VI keybindings set"
 
 
 # =============================================================================
