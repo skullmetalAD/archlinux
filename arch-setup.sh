@@ -41,12 +41,6 @@ if [[ ! -f /etc/arch-release ]]; then
     exit 1
 fi
 
-# Confirm Plasma session is active (needed for kwriteconfig6 / plasma-apply-*)
-#if [[ -z "${WAYLAND_DISPLAY:-}" && -z "${DISPLAY:-}" ]]; then
-#    warn "No active display session detected. KDE theme commands may fail."
-#    warn "For best results run this script from within a KDE Plasma session."
-#fi
-
 USERNAME=$(whoami)
 ok "Running setup for user: ${BOLD}$USERNAME${NC}"
 
@@ -175,7 +169,7 @@ section "Section 5 — AUR Packages"
 AUR_PACKAGES=(
 
     # -- Game / Desktop Streaming --
-    sunshine                                # Self-hosted game streaming server (Moonlight-compatible)
+    #sunshine                                # Self-hosted game streaming server (Moonlight-compatible)
 
     # -- Banking Security Module --
     warsaw-bin                              # Warsaw security plugin (required by Brazilian banking apps)
@@ -189,6 +183,9 @@ AUR_PACKAGES=(
     # -- BTRFS Snapshot Toolchain --
     limine-mkinitcpio-hook                  # Install kernels for the Limine bootloader
     limine-snapper-sync                     # Integrates Limine boot entries with Snapper snapshots.
+
+    # -- System utils --
+    qdirstat-bin                            # Qt-based directory statistics
     
 )
 
@@ -263,7 +260,7 @@ ok "UFW enabled — default: deny incoming / allow outgoing"
 
 # -- limine-snapper: watches for new snapshots and updates Limine entries ----------
 sudo systemctl enable --now limine-snapper-sync.service
-#ok "limine-snapper service enabled (starts on next boot)"
+#ok "limine-snapper service enabled"
 
 # -- Plasma Login Manager -----------------------------------------------------
 sudo systemctl enable plasmalogin
@@ -271,7 +268,7 @@ ok "plasmalogin enabled (starts on next boot)"
 
 # -- Pacman Cache Timer -----------------------------------------------------
 sudo systemctl enable --now paccache.timer
-ok "paccache.timer enabled (starts on next boot)"
+ok "paccache.timer enabled"
 
 # =============================================================================
 # SECTION 9: SNAPPER CONFIGURATION
@@ -284,18 +281,6 @@ if sudo snapper -c root create-config / 2>/dev/null; then
 else
     warn "Snapper root config may already exist — skipping creation"
 fi
-
-# Allow the current user to use snapper without sudo
-# Edits ALLOW_USERS in /etc/snapper/configs/root
-sudo sed -i "s|^ALLOW_USERS=\".*\"|ALLOW_USERS=\"$USERNAME\"|" \
-    /etc/snapper/configs/root
-ok "User '$USERNAME' granted snapper access"
-
-# Grant users group access to the .snapshots directory
-sudo chmod 750 /.snapshots
-sudo chown :users /.snapshots
-sudo chmod 640 /etc/snapper/configs/root
-ok ".snapshots permissions set for user access"
 
 # Enable automatic snapshot creation and cleanup timers
 sudo systemctl enable --now snapper-timeline.timer
@@ -324,9 +309,6 @@ fisher install IlanCosman/tide@v6
 ok "Tide installed"
 
 
-ok "Script finished for user: ${BOLD}$USERNAME${NC}"
-
-
 # =============================================================================
 # SECTION 12: SNAP-PAC — INSTALLATION
 # =============================================================================
@@ -337,4 +319,11 @@ info "Installing Snap-Pac..."
 # Pacman hook: auto-creates snapshots before/after package ops
 # Install after everything so it won't create snapshots during the setup proc.
 sudo pacman -S --needed --noconfirm snap-pac
-ok "Snap-Pac installed"                  
+ok "Snap-Pac installed"        
+
+
+ok "Script finished for user: ${BOLD}$USERNAME${NC}. System will reboot"
+
+sleep 20s
+
+sudo reboot now
