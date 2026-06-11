@@ -299,20 +299,9 @@ tldr --update \
 
 
 # =============================================================================
-# SECTION 11: FISH CONFIG
+# SECTION 11: SNAP-PAC — INSTALLATION
 # =============================================================================
-section "Section 11 — Configuring Fish"
-
-# -- Tide
-info "Installing Tide"
-fisher install IlanCosman/tide@v6
-ok "Tide installed"
-
-
-# =============================================================================
-# SECTION 12: SNAP-PAC — INSTALLATION
-# =============================================================================
-section "Section 12 — Snap-Pac"
+section "Section 11 — Snap-Pac"
 
 
 info "Installing Snap-Pac..."
