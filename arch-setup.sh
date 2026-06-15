@@ -196,9 +196,6 @@ AUR_PACKAGES=(
     # -- Printer Driver --
     epson-inkjet-printer-escpr2             # Epson inkjet driver — ESC/P-R 2 protocol
 
-    # -- KWin Scripts --
-    kwin-karousel                           # KWin script: carousel-style window switcher/taskbar
-
     # -- BTRFS Snapshot Toolchain --
     limine-mkinitcpio-hook                  # Install kernels for the Limine bootloader
     limine-snapper-sync                     # Integrates Limine boot entries with Snapper snapshots.
@@ -209,7 +206,7 @@ AUR_PACKAGES=(
 )
 
 info "Installing ${#AUR_PACKAGES[@]} AUR packages via yay..."
-yay -S --needed --noconfirm --noprovides "${AUR_PACKAGES[@]}"
+yay -S --needed --noconfirm "${AUR_PACKAGES[@]/#/aur/}"
 ok "AUR packages installed"
 
 # =============================================================================
