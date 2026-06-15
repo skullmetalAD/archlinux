@@ -209,7 +209,7 @@ AUR_PACKAGES=(
 )
 
 info "Installing ${#AUR_PACKAGES[@]} AUR packages via yay..."
-yay -S --needed --noconfirm "${AUR_PACKAGES[@]}"
+yay -S --needed --noconfirm --noprovides "${AUR_PACKAGES[@]}"
 ok "AUR packages installed"
 
 # =============================================================================
