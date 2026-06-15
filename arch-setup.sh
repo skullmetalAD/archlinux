@@ -25,6 +25,25 @@ info() { echo -e "${CYAN}  →  $1${NC}"; }
 fail() { echo -e "${RED}  ✗  $1${NC}"; }
 
 # =============================================================================
+# LOGGING SETUP
+# =============================================================================
+# All stdout and stderr are mirrored to a timestamped log file via tee.
+# The log captures everything printed to the terminal — including warnings
+# and errors — so you can review the full run after the fact.
+ 
+LOGFILE="$HOME/arch-setup-$(date +%Y%m%d-%H%M%S).log"
+ 
+# Redirect all output (stdout + stderr) through tee into the log file.
+# The terminal still shows everything in real time.
+exec > >(tee -a "$LOGFILE") 2>&1
+ 
+echo "Log started at $(date)" >> "$LOGFILE"
+ 
+# On any exit (clean or error), print the log path as a reminder.
+trap 'echo -e "\n${CYAN}  →  Full log saved to: ${BOLD}$LOGFILE${NC}"' EXIT
+
+
+# =============================================================================
 # PRE-FLIGHT CHECKS
 # =============================================================================
 section "Pre-flight Checks"
@@ -309,6 +328,32 @@ info "Installing Snap-Pac..."
 # Install after everything so it won't create snapshots during the setup proc.
 sudo pacman -S --needed --noconfirm snap-pac
 ok "Snap-Pac installed"        
+
+
+# =============================================================================
+# LOG SUMMARY — WARNINGS & ERRORS
+# =============================================================================
+section "Log Summary"
+ 
+# Strip ANSI colour codes from the log for clean grepping,
+# then look for lines that contain our warn (⚠) or fail (✗) markers.
+PLAIN_LOG=$(sed 's/\x1b\[[0-9;]*m//g' "$LOGFILE")
+ISSUES=$(echo "$PLAIN_LOG" | grep -E "^\s+[⚠✗]" || true)
+ 
+if [[ -n "$ISSUES" ]]; then
+    echo -e "${YELLOW}${BOLD}  The following warnings and errors were recorded:${NC}\n"
+    echo "$ISSUES"
+    echo ""
+    warn "Review the items above before rebooting."
+else
+    ok "No warnings or errors recorded — clean run."
+fi
+ 
+echo ""
+info "Full log: ${BOLD}$LOGFILE${NC}"
+info "View it with:  cat $LOGFILE"
+info "Errors only:   grep -E '[⚠✗]' $LOGFILE"
+
 
 
 ok "Script finished for user: ${BOLD}$USERNAME${NC}. System will reboot"
