@@ -244,7 +244,6 @@ yay -S --needed --noconfirm "${AUR_PACKAGES[@]/#/aur/}"
 ok "AUR packages installed"
 
 # =========================================================================
-)
 
 info "Installing ${#AUR_PACKAGES[@]} AUR packages via yay..."
 yay -S --needed --noconfirm "${AUR_PACKAGES[@]/#/aur/}"
