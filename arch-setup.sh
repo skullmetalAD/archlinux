@@ -215,7 +215,7 @@ OFFICIAL_PACKAGES=(
     epson-inkjet-printer-escpr2  # Epson inkjet driver — ESC/P-R 2 protocol (CHAOTIC REPO)
 
     # -- System utils --
-    qdirstat-bin                 # Qt-based directory statistics (CHAOTIC REPO)
+    qdirstat                # Qt-based directory statistics (CHAOTIC REPO)
 
 )
 
