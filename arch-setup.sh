@@ -73,10 +73,45 @@ info "Setting parallel downloads to 25..."
 sudo sed -i 's/^#*\s*ParallelDownloads\s*=.*/ParallelDownloads = 25/' /etc/pacman.conf
 ok "Parallel downloads set to 25"
 
-# Refresh package databases with new settings
+
+# =============================================================================
+# SECTION 1.a: CHAOTIC-AUR REPOSITORY
+# =============================================================================
+# Chaotic-AUR is a third-party repository of pre-built AUR packages.
+# Instead of building from source with yay, packages from Chaotic-AUR
+# are downloaded as pre-compiled binaries directly through pacman.
+# This makes installs faster and avoids build failures.
+# Reference: https://aur.chaotic.cx
+# =============================================================================
+section "Section 1.a — Chaotic-AUR Repository"
+
+# Step 1: Receive and locally sign the Chaotic-AUR signing key
+# This key is used by pacman to verify package signatures from the repo
+info "Importing Chaotic-AUR signing key..."
+sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+sudo pacman-key --lsign-key 3056513887B78AEB
+ok "Signing key imported and locally signed"
+
+# Step 2: Install keyring and mirrorlist packages directly from the CDN
+# These are installed before the repo is configured so pacman can
+# verify signatures of future Chaotic-AUR packages correctly
+info "Installing chaotic-keyring and chaotic-mirrorlist..."
+sudo pacman -U --noconfirm \
+    'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' \
+    'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+ok "Keyring and mirrorlist installed"
+
+# Step 3: Append the repo block to pacman.conf
+info "Adding [chaotic-aur] to /etc/pacman.conf..."
+echo -e "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist" \
+    | sudo tee -a /etc/pacman.conf > /dev/null
+ok "Chaotic-AUR added to pacman.conf"
+
+# Step 4: Refresh package databases to include Chaotic-AUR
 info "Refreshing package databases..."
 sudo pacman -Sy --noconfirm
 ok "Package databases refreshed"
+
 
 # =============================================================================
 # SECTION 2: FSTAB — SWITCH TO noatime FOR BTRFS VOLUMES
@@ -173,6 +208,14 @@ OFFICIAL_PACKAGES=(
     # -- BTRFS Snapshot Toolchain --
     snapper                      # BTRFS snapshot manager — create/list/delete snapshots
     #grub-btrfs                  # Adds BTRFS snapshots as bootable GRUB entries (recovery)
+    limine-mkinitcpio-hook       # Install kernels for the Limine bootloader (CHAOTIC REPO)
+    limine-snapper-sync          # Integrates Limine boot entries with Snapper snapshots. (CHAOTIC REPO)
+
+    # -- Printer Driver --
+    epson-inkjet-printer-escpr2  # Epson inkjet driver — ESC/P-R 2 protocol (CHAOTIC REPO)
+
+    # -- System utils --
+    qdirstat-bin                 # Qt-based directory statistics (CHAOTIC REPO)
 
 )
 
@@ -192,17 +235,15 @@ AUR_PACKAGES=(
 
     # -- Banking Security Module --
     warsaw-bin                              # Warsaw security plugin (required by Brazilian banking apps)
-
-    # -- Printer Driver --
-    epson-inkjet-printer-escpr2             # Epson inkjet driver — ESC/P-R 2 protocol
-
-    # -- BTRFS Snapshot Toolchain --
-    limine-mkinitcpio-hook                  # Install kernels for the Limine bootloader
-    limine-snapper-sync                     # Integrates Limine boot entries with Snapper snapshots.
-
-    # -- System utils --
-    qdirstat-bin                            # Qt-based directory statistics
     
+    
+)
+
+info "Installing ${#AUR_PACKAGES[@]} AUR packages via yay..."
+yay -S --needed --noconfirm "${AUR_PACKAGES[@]/#/aur/}"
+ok "AUR packages installed"
+
+# =========================================================================
 )
 
 info "Installing ${#AUR_PACKAGES[@]} AUR packages via yay..."
