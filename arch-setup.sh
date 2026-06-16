@@ -343,6 +343,13 @@ sudo systemctl enable --now snapper-timeline.timer
 sudo systemctl enable --now snapper-cleanup.timer
 ok "Snapper timeline and cleanup timers enabled"
 
+# Remove limine extra config if it exists
+if [[ ! -f /boot/limine/limine.conf ]]; then
+    sudo rm /boot/limine/limine.conf
+    ok "limine/limine.conf deleted"
+else
+    warn "liminie/Limine.conf does not exist, skipping this step"
+fi
 
 # =============================================================================
 # SECTION 10: TEALDEER — REFRESH CACHE
