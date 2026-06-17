@@ -154,10 +154,10 @@ else
     ok "yay installed"
 fi
 
-# =============================================================================
-# SECTION 4: OFFICIAL REPOSITORY PACKAGES
-# =============================================================================
-section "Section 4 — Official Repository Packages"
+# ======================================================================================
+# SECTION 4: "OFFICIAL" REPOSITORY PACKAGES - PLEASE NOTE THERE ARE CHAOTIC PKGS AS WELL
+# ======================================================================================
+section "Section 4 — Pacman Repository Packages"
 
 OFFICIAL_PACKAGES=(
 
@@ -207,9 +207,11 @@ OFFICIAL_PACKAGES=(
 
     # -- BTRFS Snapshot Toolchain --
     snapper                      # BTRFS snapshot manager — create/list/delete snapshots
+    btrfs-assistant              # An (GUI) application for managing BTRFS subvolumes and Snapper snapshots
     #grub-btrfs                  # Adds BTRFS snapshots as bootable GRUB entries (recovery)
     limine-mkinitcpio-hook       # Install kernels for the Limine bootloader (CHAOTIC REPO)
     limine-snapper-sync          # Integrates Limine boot entries with Snapper snapshots. (CHAOTIC REPO)
+
 
     # -- Printer Driver --
     epson-inkjet-printer-escpr2  # Epson inkjet driver — ESC/P-R 2 protocol (CHAOTIC REPO)
@@ -316,7 +318,7 @@ ok "UFW enabled — default: deny incoming / allow outgoing"
 
 # -- limine-snapper: watches for new snapshots and updates Limine entries ----------
 sudo systemctl enable --now limine-snapper-sync.service
-#ok "limine-snapper service enabled"
+ok "limine-snapper service enabled"
 
 # -- Plasma Login Manager -----------------------------------------------------
 sudo systemctl enable plasmalogin
@@ -344,7 +346,7 @@ sudo systemctl enable --now snapper-cleanup.timer
 ok "Snapper timeline and cleanup timers enabled"
 
 # Remove limine extra config if it exists
-if [[ ! -f /boot/limine/limine.conf ]]; then
+if [[ -f /boot/limine/limine.conf ]]; then
     sudo rm /boot/limine/limine.conf
     ok "limine/limine.conf deleted"
 else
