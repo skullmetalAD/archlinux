@@ -174,6 +174,7 @@ OFFICIAL_PACKAGES=(
     # -- System Monitoring --
     btop                        # Interactive resource monitor (CPU/RAM/disk/net)
     fastfetch                   # Fast system information display (neofetch alternative)
+    reflector                   # A Python 3 module and script to retrieve and filter the latest Pacman mirror list.
 
     # -- File Management --
     dolphin                     # KDE default graphical file manager
